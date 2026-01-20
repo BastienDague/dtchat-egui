@@ -6,6 +6,7 @@ mod header_view;
 mod main_view;
 mod messages;
 mod network_view;
+mod options_view;
 mod utils;
 
 use app::DTChatApp;

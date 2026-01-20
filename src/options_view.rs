@@ -1,6 +1,6 @@
 use crate::main_view::MirroredData;
 use eframe::egui;
-
+use rfd::FileDialog;
 
 
 pub struct OptionsView{
@@ -25,7 +25,9 @@ impl OptionsView{
             ui.horizontal(|ui| {
                 ui.label("Change Contact Plan :");
                 if ui.button("Explore").clicked() {
-                    // Action future ici
+                    let _new_cp = FileDialog::new()
+                    .set_directory("/")
+                    .pick_file();
                 }
             });
 

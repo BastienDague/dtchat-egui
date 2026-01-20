@@ -21,5 +21,3 @@ default = []
 dev = []
 with_delay = ["dtchat-backend/with_delay"]
 
-[patch."https://github.com/DTN-MTP/dtchat-backend"]
-dtchat-backend = { path = "../dtchat-backend" }

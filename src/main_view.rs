@@ -40,13 +40,16 @@ pub struct MainView {
 
     // data
     pub data: MirroredData,
+
+    // model
+    pub model: Arc<Mutex<ChatModel>>
 }
 
 impl MainView {
     pub fn new(local: Peer, model: Arc<Mutex<ChatModel>>) -> Self {
         Self {
             header_view: HeaderView::new(),
-            message_view: MessagesView::new(model),
+            message_view: MessagesView::new(model.clone()),
             network_view: NetworkView {},
             current_view: ViewType::Messages,
             options_view: OptionsView::new(),
@@ -59,6 +62,7 @@ impl MainView {
                 rooms: HashMap::new(),
                 pbat_support_by_model: false,
             },
+            model: model,
         }
     }
 
@@ -117,8 +121,11 @@ impl MainView {
                     .show(ui, &self.data.network_events, &self.data.app_events);
             }
             ViewType::Options => {
-                self.options_view
-                    .show(ui, &mut self.data)
+                    if let Some((path,algo)) = self.options_view.show(ui, &mut self.data){
+                        if let Ok(mut model) = self.model.lock(){
+                            model.update(path,&algo);
+                        }
+                    }
             }
         }
     }

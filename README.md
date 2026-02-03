@@ -13,6 +13,14 @@ CONFIG_PATH=./db/conf.yaml ENGINE_RECEIVE_DELAY_MS=3000 PEER_UUID=1 cargo run --
 CONFIG_PATH=./db/conf.yaml ENGINE_RECEIVE_DELAY_MS=7000 PEER_UUID=2 cargo run --features=with_delay
 # Third terminal
 CONFIG_PATH=./db/conf.yaml ENGINE_RECEIVE_DELAY_MS=3000 PEER_UUID=3 cargo run --features=with_delay
+
+
+features available :
+
+-contact_work_area
+-contact_suppression
+-first_depleted
+
 ```
 
 (The with_delay features allows the implementation of articial delays to match the CP delays for internet tests)

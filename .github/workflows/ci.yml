@@ -2,7 +2,7 @@ name: DT-Chat CI
 
 on:
   push:
-    branches: ["develop","main","feature/*"]
+    branches: ["develop","main","feature/*", "fix/*"]
 
 jobs:
   test:
@@ -10,6 +10,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.MY_PAT}}
       - run: | 
             sudo apt-get update
             sudo apt-get install -y protobuf-compiler libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libssl-dev

@@ -15,8 +15,15 @@ uuid = { version = "1.6.1", features = ["v4"] }
 chrono = "0.4.41"
 serde_yaml = "0.9.33"
 egui-file-dialog = "0.10.0"
+rfd = "0.17.2"
 
 [features]
 default = []
 dev = []
 with_delay = ["dtchat-backend/with_delay"]
+contact_work_area = ["dtchat-backend/contact_work_area"]
+contact_suppression = ["dtchat-backend/contact_suppression"]
+first_depleted = ["dtchat-backend/first_depleted"]
+
+[patch."https://github.com/DTN-MTP/dtchat-backend"]
+dtchat-backend = { path = "../dtchat-backend" }

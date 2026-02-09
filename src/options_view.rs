@@ -1,11 +1,12 @@
 use crate::main_view::MirroredData;
 use eframe::egui;
-use rfd::FileDialog;
+use egui_file_dialog::FileDialog;
 
 
 pub struct OptionsView{
     pub selected_algo: String,
     pub selected_cp_path: String,
+    file_dialog: FileDialog,
 }
 
 impl OptionsView{
@@ -13,9 +14,11 @@ impl OptionsView{
         Self {
             selected_algo: "VolCgrNodeParenting".to_string(),
             selected_cp_path: "./db/ion.cp".to_string(),
+            file_dialog: FileDialog::new(),
         }
     }
     pub fn show(&mut self,ui: &mut egui::Ui, _data: &mut MirroredData) -> Option<(String,String)>{
+        self.file_dialog.update(ui.ctx());
         let mut update = false;
         ui.vertical(|ui| {
             ui.add_space(5.0);
@@ -27,15 +30,15 @@ impl OptionsView{
             //Contact Plan
             ui.horizontal(|ui| {
                 ui.label("Change Contact Plan :");
-                if ui.button("Explore").clicked() {
-                    if let Some(path) = FileDialog::new()
-                    .set_directory("/")
-                    .pick_file(){
-                        self.selected_cp_path = path.display().to_string();
-                        update = true;
+                if ui.button("🛰  Explore").clicked() {
+                    self.file_dialog.pick_file();
                     }
-                }
             });
+
+            if let Some(path) = self.file_dialog.take_picked(){
+                self.selected_cp_path = path.display().to_string();
+                update = true;
+            }
 
             ui.add_space(10.0);
 

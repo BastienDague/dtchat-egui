@@ -12,7 +12,7 @@ pub struct OptionsView{
 impl OptionsView{
     pub fn new() -> Self {
         Self {
-            selected_algo: "VolCgrNodeParenting".to_string(),
+            selected_algo: "VolCgrHybridParenting".to_string(),
             selected_cp_path: "./db/ion.cp".to_string(),
             file_dialog: FileDialog::new(),
         }

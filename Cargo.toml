@@ -20,3 +20,6 @@ egui-file-dialog = "0.10.0"
 default = []
 dev = []
 with_delay = ["dtchat-backend/with_delay"]
+contact_work_area = ["dtchat-backend/contact_work_area"]
+contact_suppression = ["dtchat-backend/contact_suppression"]
+first_depleted = ["dtchat-backend/first_depleted"]

@@ -2,6 +2,7 @@ use crate::app::DisplayEvent;
 use crate::header_view::HeaderView;
 use crate::messages::MessagesView;
 use crate::network_view::NetworkView;
+use crate::options_view::OptionsView;
 use dtchat_backend::dtchat::{ChatModel, Peer, Room};
 use dtchat_backend::message::ChatMessage;
 use dtchat_backend::time::DTChatTime;
@@ -14,6 +15,7 @@ use std::sync::{Arc, Mutex};
 pub enum ViewType {
     Messages,
     Network,
+    Options,
 }
 
 pub struct MirroredData {
@@ -31,21 +33,26 @@ pub struct MainView {
     pub header_view: HeaderView,
     pub message_view: MessagesView,
     pub network_view: NetworkView,
+    pub options_view: OptionsView,
 
     // current_view
     pub current_view: ViewType,
 
     // data
     pub data: MirroredData,
+
+    // model
+    pub model: Arc<Mutex<ChatModel>>
 }
 
 impl MainView {
     pub fn new(local: Peer, model: Arc<Mutex<ChatModel>>) -> Self {
         Self {
             header_view: HeaderView::new(),
-            message_view: MessagesView::new(model),
+            message_view: MessagesView::new(model.clone()),
             network_view: NetworkView {},
             current_view: ViewType::Messages,
+            options_view: OptionsView::new(),
             data: MirroredData {
                 messages: vec![],
                 app_events: VecDeque::new(),
@@ -55,6 +62,7 @@ impl MainView {
                 rooms: HashMap::new(),
                 pbat_support_by_model: false,
             },
+            model: model,
         }
     }
 
@@ -89,7 +97,16 @@ impl MainView {
                     ViewType::Messages,
                     "\u{2709} Messages",
                 );
-                ui.selectable_value(&mut self.current_view, ViewType::Network, "🖧 Network");
+                ui.selectable_value(
+                    &mut self.current_view,
+                    ViewType::Network,
+                    "🖧 Network"
+                );
+                ui.selectable_value(
+                    &mut self.current_view,
+                    ViewType::Options,
+                    "⚙ Options"
+                );
             });
             ui.add_space(3.0);
         });
@@ -102,6 +119,13 @@ impl MainView {
             ViewType::Network => {
                 self.network_view
                     .show(ui, &self.data.network_events, &self.data.app_events);
+            }
+            ViewType::Options => {
+                    if let Some((path,algo)) = self.options_view.show(ui, &mut self.data){
+                        if let Ok(mut model) = self.model.lock(){
+                            model.update(path,&algo);
+                        }
+                    }
             }
         }
     }

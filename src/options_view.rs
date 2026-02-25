@@ -30,7 +30,7 @@ impl OptionsView{
             //Contact Plan
             ui.horizontal(|ui| {
                 ui.label("Change Contact Plan :");
-                if ui.button("🛰  Explore").clicked() {
+                if ui.button("Explore 🌟").clicked() {
                     self.file_dialog.pick_file();
                     }
             });

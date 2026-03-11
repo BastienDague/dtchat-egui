@@ -47,37 +47,52 @@ impl OptionsView{
                 ui.label("Change Algo :");
                 let old_algo = self.selected_algo.clone();
                 
+                let mut algos: Vec<&str> = vec![
+                    "VolCgrNodeParenting",
+                    "VolCgrHybridParenting",
+                    "VolCgrHybridParentingHop",
+                    "VolCgrNodeParentingHop",
+                ];
+
+                #[cfg(feature = "contact_work_area")]
+                algos.extend([
+                    "VolCgrContactParenting",
+                    "VolCgrContactParentingHop",
+                ]);
+
+                #[cfg(feature = "contact_suppression")]
+                algos.extend([
+                    "CgrFirstEndingHybridParentingHop",
+                    "CgrFirstEndingHybridParenting",
+                    "CgrFirstEndingNodeParentingHop",
+                    "CgrFirstEndingNodeParenting",
+                ]);
+
+                #[cfg(all(feature = "contact_work_area", feature = "contact_suppression"))]
+                algos.extend([
+                    "CgrFirstEndingContactParenting",
+                    "CgrFirstEndingContactParentingHop",
+                ]);
+
+                #[cfg(all(feature = "contact_suppression", feature = "first_depleted"))]
+                algos.extend([
+                    "CgrFirstDepletedHybridParentingHop",
+                    "CgrFirstDepletedHybridParenting",
+                    "CgrFirstDepletedNodeParentingHop",
+                    "CgrFirstDepletedNodeParenting",
+                ]);
+
+                #[cfg(all(feature = "contact_work_area", feature = "contact_suppression", feature = "first_depleted"))]
+                algos.extend([
+                    "CgrFirstDepletedContactParentingHop",
+                    "CgrFirstDepletedContactParenting",
+                ]);
+
                 egui::ComboBox::from_id_salt("algo_selector")
                     .selected_text(&self.selected_algo)
                     .show_ui(ui, |ui| {
-                        //No features
-                        ui.selectable_value(&mut self.selected_algo, "VolCgrNodeParenting".to_string(), "VolCgrNodeParenting");
-                        ui.selectable_value(&mut self.selected_algo, "VolCgrHybridParenting".to_string(), "VolCgrHybridParenting");
-                        ui.selectable_value(&mut self.selected_algo, "VolCgrHybridParentingHop".to_string(), "VolCgrHybridParentingHop");
-                        ui.selectable_value(&mut self.selected_algo, "VolCgrNodeParentingHop".to_string(), "VolCgrNodeParentingHop");
-                        #[cfg(feature = "contact_work_area")]{
-                            ui.selectable_value(&mut self.selected_algo, "VolCgrContactParenting".to_string(), "VolCgrContactParenting");
-                            ui.selectable_value(&mut self.selected_algo, "VolCgrContactParentingHop".to_string(), "VolCgrContactParentingHop");
-                        }
-                        #[cfg(feature = "contact_suppression")]{
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstEndingHybridParentingHop".to_string(), "CgrFirstEndingHybridParentingHop");
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstEndingHybridParenting".to_string(), "CgrFirstEndingHybridParenting");
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstEndingNodeParentingHop".to_string(), "CgrFirstEndingNodeParentingHop");
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstEndingNodeParenting".to_string(), "CgrFirstEndingNodeParenting");
-                        }
-                        #[cfg(all(feature = "contact_work_area", feature = "contact_suppression"))]{
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstEndingContactParenting".to_string(), "CgrFirstEndingContactParenting");
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstEndingHybridParenting".to_string(), "CgrFirstEndingHybridParenting");
-                        }
-                        #[cfg(all(feature = "contact_suppression", feature = "first_depleted"))]{
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstDepletedHybridParentingHop".to_string(), "CgrFirstDepletedHybridParentingHop");
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstDepletedHybridParenting".to_string(), "CgrFirstDepletedHybridParenting");
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstDepletedNodeParentingHop".to_string(), "CgrFirstDepletedNodeParentingHop");
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstDepletedNodeParenting".to_string(), "CgrFirstDepletedNodeParenting");
-                        }
-                        #[cfg(all(feature = "contact_work_area",feature = "contact_suppression",feature = "first_depleted"))]{
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstDepletedContactParentingHop".to_string(), "CgrFirstDepletedContactParentingHop");
-                            ui.selectable_value(&mut self.selected_algo, "CgrFirstDepletedContactParenting".to_string(), "CgrFirstDepletedContactParenting");
+                        for algo in algos{
+                            ui.selectable_value(&mut self.selected_algo, algo.to_string(), algo);
                         }
                     });
                 if old_algo != self.selected_algo{

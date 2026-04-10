@@ -42,7 +42,7 @@ pub struct MainView {
     pub data: MirroredData,
 
     // model
-    pub model: Arc<Mutex<ChatModel>>
+    pub model: Arc<Mutex<ChatModel>>,
 }
 
 impl MainView {
@@ -97,16 +97,8 @@ impl MainView {
                     ViewType::Messages,
                     "\u{2709} Messages",
                 );
-                ui.selectable_value(
-                    &mut self.current_view,
-                    ViewType::Network,
-                    "🖧 Network"
-                );
-                ui.selectable_value(
-                    &mut self.current_view,
-                    ViewType::Options,
-                    "⚙ Options"
-                );
+                ui.selectable_value(&mut self.current_view, ViewType::Network, "🖧 Network");
+                ui.selectable_value(&mut self.current_view, ViewType::Options, "⚙ Options");
             });
             ui.add_space(3.0);
         });
@@ -121,11 +113,11 @@ impl MainView {
                     .show(ui, &self.data.network_events, &self.data.app_events);
             }
             ViewType::Options => {
-                    if let Some((path,algo)) = self.options_view.show(ui, &mut self.data){
-                        if let Ok(mut model) = self.model.lock(){
-                            model.update(path,&algo);
-                        }
+                if let Some((path, algo)) = self.options_view.show(ui, &mut self.data) {
+                    if let Ok(mut model) = self.model.lock() {
+                        model.update(path, &algo);
                     }
+                }
             }
         }
     }
